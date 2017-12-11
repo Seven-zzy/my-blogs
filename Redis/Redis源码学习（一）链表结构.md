@@ -4,8 +4,8 @@
 ### 2. list的底层实现**之一**就是链表。
 ### 3. 链表的实现
 #### 3.1 链表节点
-  每个链表节点由adlist.h/listNode表示
-     typedef struct listNode {
+    每个链表节点由adlist.h/listNode表示：
+    typedef struct listNode {
         struct listNode *prev;  //前驱节点，如果是list的头节点，则prev指向NULL
         struct listNode *next;  //后继节点，如果是list的尾节点，则prev指向NULL
         void *value;   //万能指针，能够存放任何信息
@@ -13,7 +13,7 @@
 
   使用双向链表的好处：获取某个节点的前驱节点和后继节点的复杂度为O(1)。
 #### 3.2 表头
-   表头用于存放上面双向链表的信息，由adlist.h/list结构表示：
+    表头用于存放上面双向链表的信息，由adlist.h/list结构表示：
     typedef struct list {
         listNode *head;   //链表头节点指针
         listNode *tail;   //链表尾节点指针
@@ -25,7 +25,7 @@
         unsigned long len;    //链表长度
     } list;
     
-   使用list表头管理链表的好处：
+    使用list表头管理链表的好处：
         head和tail指针：对于链表头节点和尾节点操作的复杂度为O(1)；
         len长度计数器：获取链表节点数量的复杂度为O(1);
         dup、free和match指针：**实现多态**，listNode使用万能指针void*保存节点的值，list表头使用dup、free、match指针来针对链表中存放的不同对象实现不同的方法。
