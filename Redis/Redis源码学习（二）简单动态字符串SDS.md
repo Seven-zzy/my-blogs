@@ -1,0 +1,34 @@
+### 参考文章：http://blog.csdn.net/men_wen/article/details/69396550
+
+
+### 1.介绍
+
+Redis兼容传统的C语言字符串类型，但没直接使用C语言传统以'\0'结尾的字符数组表示，而是自己构建了名为SDS(simple dynamic string)的对象。
+SDS在Redis中应用广泛，例如：string在底层就是SDS实现的。
+
+
+### 2.SDS定义
+    SDS定义在sds.h/sdshdr
+    typedef char *sds;
+
+    SDS也有一个表头存放sds的信息：
+    struct sdshdr {
+        int len;   //buf中已占用空间的长度
+        int free;  //buf中剩余可用空间的长度
+        char buf[];   //采初始化sds分配的数据空间，而且是柔性数组(Flexible array mebmer)
+    };
+buf分配了(len + 1 + free)个字节的长度。前len个字节保存字符数据，接下来一个字节保存'\0'，剩下的free个字节未使用。
+
+ 
+### 3.SDS的优点
+SDS本质就是char *,但因为有表头sdshdr结构的存在，SDS比传统C字符串更优秀，并且能兼容传统C字符串。
+
+#### 3.1 兼容C的部分函数
+因为SDS也采用以'\0'作为结尾，所以SDS能够使用一部分。
+
+#### 3.2 二进制安全(Binary Safe)
+传统C字符串符合ASCII编码，遇零则止。当读取一个字符串时，只要遇到'\0'，就认为到达结尾，忽略后面的所有字符。因此，传统C字符串保存图片等二进制文件时会被阶段。
+而SDS表头的buf被定义为char *，判断是否到达字符串结尾的一句是表头的len成员，所以它可以存放任何二进制的数据和文本，包括'\0'。
+
+#### 3.3 杜绝缓冲区溢出
+sdshdr的free记录着buf字符数组中未使用空间的字节数，进行append命令追加字符串时，不用会先进行内存扩展，然后追加。
