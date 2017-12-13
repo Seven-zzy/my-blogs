@@ -4,7 +4,7 @@
 ### 1.介绍
 
 Redis兼容传统的C语言字符串类型，但没直接使用C语言传统以'\0'结尾的字符数组表示，而是自己构建了名为SDS(simple dynamic string)的对象。
-SDS在Redis中应用广泛，例如：string在底层就是SDS实现的。
+SDS在Redis中应用广泛，例如：键值对在底层就是SDS实现的。
 
 
 ### 2.SDS定义
