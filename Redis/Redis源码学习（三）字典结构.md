@@ -54,3 +54,23 @@ dictType中保存着操作字典不同类型key和value的方法  的指针。
         void (*valDestructor)(void *privdata, void *obj); //销毁value的析构函数
     } dictType;
 ```
+
+### 3.Rehash
+当hash表的大小不能满足需求，就会发生2个或2个以上的键被分配到hash表的同一个索引上，称为hash冲突。Redis通过链表解决hash冲突的问题。但同一个索引位置存储多个Entry会导致hash表遍历性能下降，所以应该进来避免冲突。我们希望hash表的负载因子(load factor)能维持在一个合理的范围内，于是有了rehash，对hash表进行扩展或收缩。
+Redis进行rehash的步骤如下：
+```c
+    1.扩展或收缩：
+      1.1 扩展：ht[1]的大小为第一个大于等于ht[0].used * 2的2的n次方。
+      1.2 收缩：ht[1]的大小为第一个大于等于ht[0].used 的2的n次方。
+    2.将所有ht[0]上的节点rehash到ht[1]上。
+    3.释放ht[0],将ht[1]设置为ht[0],并创建新的ht[1]。
+```
+收缩或扩展hash表需要即将ht[0]中的键全部rehash到ht[1]中，但是rehash操作不是一次性、集中式完成的，而是分多次、渐进式、断续进行的。这样才不会对服务器性能造成影响。下面介绍渐进式rehash。
+
+### 4. 渐进式rehash
+关键点：
+```c
+      1.字典结构dict中的成员rehashidx，当rehashidx为-1时表示不进行rehash，当rehashidx为0时表示开始rehash；
+      2.当rehash开始后，每次对字典的增删改查操作时，则顺带进行单步rehash，完成后将rehashidx+1；
+      3.rehash完成后，置rehashidx为-1，表示完成rehash。
+```
