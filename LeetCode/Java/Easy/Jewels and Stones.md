@@ -141,3 +141,14 @@ public int numJewelsInStones(String J, String S) {
 }
 ```
  
+解法5： 新思路，用一个数组arrS保存S的所有字符是否出现，再遍历J，统计J中中有多少个元素在arrS中出现
+```java
+public int numJewelsInStones(String J, String S) {
+    int ans = 0;
+    int[] arr = new int[128];
+
+        for(char a: S.toCharArray()) arr[a]++;
+        for(char a: J.toCharArray()) ans+=arr[a];
+        return ans;
+}
+```
