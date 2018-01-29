@@ -103,3 +103,35 @@ public int numJewelsInStones(String J, String S) {
         return index;
     }
 ```
+
+解法3： 讨论区中看到的和我的解法相似的写法，判断逻辑比我的少一些，这里的数组构造和赋值的方式更容易理解。
+
+```java
+/**
+Why an array of length 75? Two reasons
+
+We need to consider both upper-case and lower-case characters
+ASCII of 'z' - '0' is 74. (https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html)
+**/
+public int numJewelsInStones(String J, String S) {
+        if(J.length() == 0 || S.length() == 0)
+            return 0;
+        
+        // Using helper array for O(1) loopkup when traversing S
+        int[] jewels = new int[75];
+        for(int i=0; i<J.length(); i++) {
+            jewels[(J.charAt(i) - '0')] = 1;
+        }
+        
+        int result = 0;
+        for(int i=0; i<S.length(); i++) {
+            if(jewels[(S.charAt(i) - '0')] == 1) {
+                result++;
+            }
+        }
+        
+        return result;
+    }
+ ```
+ 
+ 
