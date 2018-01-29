@@ -134,4 +134,10 @@ public int numJewelsInStones(String J, String S) {
     }
  ```
  
+ 解法4：又看到了评论区有人用1行正则表达式就实现了，。
+ ```java
+ public int numJewelsInStones(String J, String S) {
+    return S.replaceAll("[^" + J + "]", "").length();
+}
+```
  
