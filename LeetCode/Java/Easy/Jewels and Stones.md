@@ -152,3 +152,8 @@ public int numJewelsInStones(String J, String S) {
         return ans;
 }
 ```
+时间复杂度O(n)，空间复杂度O(128)~O(1)。
+为什么是128个长度的int数组呢，因为ASCII码表示的就是128个英语字符。所以128个足够描述英语中的大小写字母。实际上这个数字还可以精确到ASCII码中最后一个英语字母的数值。
+更多关于编码的知识可以参考以下博文：
+http://kxjhlele.iteye.com/blog/333211
+
